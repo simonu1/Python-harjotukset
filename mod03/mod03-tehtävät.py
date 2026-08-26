@@ -63,11 +63,11 @@ leiviska_g = a * 20 * 32 * 13.3
 naulat_g = b * 32 * 13.3
 luodit_g = c * 13.3
 yhteismassa = leiviska_g + naulat_g + luodit_g
-kilogrammat = int(yhteismassa // 1000)
-grammat = yhteismassa % 1000
+kg = int(yhteismassa // 1000)
+g = yhteismassa % 1000
 
 print(f'Massa nykymittojen mukaan:')
-print(f'{kilogrammat} kilogrammaa ja {grammat:.2f} grammaa.')
+print(f'{kg} kilogrammaa ja {g:.2f} grammaa.')
 
 #6
 
