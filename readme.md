@@ -17,3 +17,5 @@ Tein tehtävät 1-4
 ## moduuli 5
 
 tein tehtävät 1 ja 4
+tein loput tehtävät
+
