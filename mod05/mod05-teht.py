@@ -82,3 +82,4 @@ while i < N:
            n += 1
 pii = 4 * n / N
 print(f'Pi:n likiarvo: {pii}')
+print(f'pisteitä arvottu yhteensä {N}, ympyrän sisälle osui {n} kpl')
