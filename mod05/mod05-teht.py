@@ -46,7 +46,7 @@ while arv != oikea_nro:
 print(f'oikea nro {oikea_nro}')'''
 
 #5 
-
+'''
 kt = input("anna käyttäjätunnus (python): \n")
 ss = input("anna salasana (rules): \n")
 
@@ -62,10 +62,10 @@ while kt != 'python' or ss != 'rules':
 if kt == 'python' and ss == 'rules':
     print('tervetuloa')
 else:
-    print('pääsy evätty')
+    print('pääsy evätty')'''
 
 #6
-'''import random
+import random
 
 
 N = int(input('anna arvottavien pisteiden määrä: '))
@@ -76,12 +76,9 @@ i = 0 # montako pistettä on arvottu
 while i < N:
     x = random.uniform(-1, 1)
     y = random.uniform(-1, 1)
-
-    if x**2 + y**2 < 1:
-        n += 1
-
+    print(f'{i}, arvotun pisteen koordinaatit x: {x:.2f}, y:{y:.2f}')
     i += 1
-
+    if x**2 + y**2 < 1:
+           n += 1
 pii = 4 * n / N
-print(f'Pi:n likiarvo: {pii}')'''
-
+print(f'Pi:n likiarvo: {pii}')
