@@ -19,3 +19,16 @@ Tein tehtävät 1-4
 tein tehtävät 1 ja 4
 tein loput tehtävät
 
+## moduuli 6
+
+kaikki tehtävät tehty
+
+## moduuli 7
+
+kaikki tehtävät tehty
+
+## moduuli 8
+
+## moduuli 9
+
+tehtävät 1, 2 ja 3
