@@ -29,6 +29,9 @@ kaikki tehtävät tehty
 
 ## moduuli 8
 
+kaikki tehtävät
+
 ## moduuli 9
 
 tehtävät 1, 2 ja 3
++4
