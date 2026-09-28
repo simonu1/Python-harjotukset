@@ -1,43 +1,33 @@
-class Elain:
-
-    elainten_lkm = 0
-
-    def __init__(self, nimi, paino, syntaik):
+class Julkaisu:
+    def __init__(self, nimi):
         self.nimi = nimi
-        self.paino = paino
-        self.syntaik = syntaik
+ # kirja aliluokka, perii julkaisun
+class Kirja(Julkaisu):
+    def __init__(self, nimi, kirjoittaja, sivumaara):
+        super().__init__(nimi)
+        self.kirjoittaja = kirjoittaja
+        self.sivumaara = sivumaara
 
-    def liiku(self):
-        print(f'{self.nimi} liikkuu johonkin')
+    def tulosta_tiedot(self):
+        print(f"Kirjan nimi: {self.nimi}")
+        print(f"Kirjoittaja: {self.kirjoittaja}")
+        print(f"Sivumäärä: {self.sivumaara} sivua")
 
-    def kaikki_tiedot(self):
-        print(f'nimi {self.nimi}, paino {self.paino/1000}kg, syntymäaika {self.syntaik}')
+# lehti aliluokka, perii julkaisun
+class Lehti(Julkaisu):
+    def __init__(self, nimi, paatoimittaja):
+        super().__init__(nimi)
+        self.paatoimittaja  = paatoimittaja
 
-class Peto:
-    def __init__(self, on_metsastaja):
-        self.on_metsastaja = on_metsastaja
+    def tulosta_tiedot(self):
+        print(f'lehden nimi: {self.nimi}')
+        print(f'päätoimittaja: {self.paatoimittaja}')
 
-class Ilves(Elain):
-    
-    def kilju(self):
-        print(f'ilves nimeltä {self.nimi} kiljuu!')
+#pääohjelma
 
-    def kaikki_tiedot(self):
-        print('\nIlves')
-        super().kaikki_tiedot()
-    
-class Karhu(Elain, Peto):
-    def __init__(self, nimi, paino, syntaik, on_horroksessa):
-        self.on_horroksessa = on_horroksessa
-        Elain.__init__(self, nimi, paino, syntaik)
-        Peto.__init__(self.on_metsastaja)
+if __name__ == "__main__":
+    aku_ankka = Lehti("aku ankka", "aki hyyppä")
+    hytti_nro_6 = Kirja("hytti n:o 6", "rosa liksom", 200)
 
-    def karju(self):
-        print(f'karhu nimeltä {self.nimi} karjuu')
-
-    def liiku(self):
-        print(f'karhu {self.nimi} myörii eteenpäin')
-
-    def kaikki_tiedot(self):
-        print(f'\nkarhu on metsastaja: {self.on_metsastaja}, joka on nyt talviunilla{self.on_horroksessa}')
-        super().kaikki_tiedot()
+aku_ankka.tulosta_tiedot()
+hytti_nro_6.tulosta_tiedot()
