@@ -1,9 +1,9 @@
 class esine:
     #Yksittäinen inventaarioon lisättävä esine.
 
-    def __init__(self, nimi):
+    def __init__(self, nimi, kuvaus):
         self.nimi = nimi
-        
+        self.kuvaus = kuvaus
 
     def kayta(self):
         #Käytä esinettä ja palauta käyttäjälle ilmoitettava viesti.
@@ -18,16 +18,22 @@ class esine:
     def __str__(self):
         return self.tiedot()
 
+class Pelaaja:
+    def __init__(self, nimi, ika):
+        self.nimi = nimi
+        self.ika = ika
+        self.pisteet = 0
+        self.inventory =[]
 
 #tyhjä lista esineille
 inventory = []
 
-def tervehdi(pnimi):
-    print(f'terve {pnimi}')
+def tervehdi(ppelaajanimi):
+    print(f'terve {ppelaajanimi}')
 
 def lisaa_esine():
     nimi = input("lisää esine inventaarioon: ")
-    uusi_esine = esine(nimi)
+    uusi_esine = esine(nimi, "")
     inventory.append(uusi_esine)
     print(f'lisätty: {uusi_esine}')
 
@@ -42,16 +48,57 @@ def nayta_inventaario():
             x += 1
     print('-------------------------------------------')
 
-def lebron_highlights():
-    print('lebron highlights joskus!')
+
+def pelaa_pelia():
+    peli_käynnissa = True
+    print('tervetuloa peliin')
+    print(" 'esc' pysäyttääksesi pelin")
+
+    while peli_käynnissa:
+        print('valitse minne mennään (e / t / o / v)')
+        valinta = input('anna komento: ').strip().lower()
+
+        if valinta == 'e':
+            print('jatketaan eteenpäin...')
+
+        elif valinta == 't':
+            print('peruutetaan takaisin...')
+
+        elif valinta == 'o':
+            print('käännytään oikealle...')
+
+        elif valinta == 'v':
+            print('käännytään vasemmalle...')
+
+        elif valinta == "esc":
+            peli_tauolla = True
+            print("\n--- PELI ON TAUOLLA ---")
+
+            while peli_tauolla:
+                print("1. Jatka peliä")
+                print("2. Katso inventaario")
+                print("lopeta - Palaa päävalikkoon")
+
+                tauko_valinta = input("\nAnna komento: ").strip().lower()
+
+                if tauko_valinta == '1':
+                    print("Jatketaan peliä...\n")
+                    peli_tauolla = False
+                elif tauko_valinta == '2':
+                    print("\n--- REPUN SISÄLTÖ ---")
+                    nayta_inventaario()
+                    print("--------------------\n")
+                elif tauko_valinta == 'lopeta':
+                    print("Palataan päävalikkoon.")
+                    peli_tauolla = False
+                    peli_käynnissa = False
+                else:
+                    print("Tuntematon komento.")
 
 
-
-
-#pääohjelma
+#päävalikon ohjelma
 name = input("anna nimesi: ")
 age = int(input("kuinka vanha olet:"))
-print("hei", name)
 
 if age < 12:
     print('olet alaikäinen, ohjelma sammuu.')
@@ -60,17 +107,23 @@ else:
 
     while True:
         print('\nPäävalikko')
-        print('1. noomorjest')
-        print('2. lebroooon')
-        print('kirjoita "lopeta" lopettaaksesi')
+        print('1. Aloita peli')
+        print('2. Ohjeet')
+        print('3. Katso parhaat tulokset')
+        print('4. lopettaaksesi pelin')
 
         komento = input('\nAnna komento: ')
-        if komento == "lopeta":
+        if komento == "4":
             print('ohjelma lopetetaan')
             break
         elif komento == '1':
-            print(f'moro {name}.')
+            print('Aloitetaan peli')
+            pelaa_pelia()
         elif komento == '2':
-            print('lebron highlights joskus!')
+            print('\n---- Pelin ohjeet ----')
+            print('Tässä pelissä teet valintoja, joilla sinun täytyy läpäistä taso.')
+            print('Peli koostuu useammasta tasosta, jotka pitää läpäistä voittaaksesi!')
+        elif komento == '3':
+            print('näytetään tulokset (luetaan tiedosto)...')
         else:
             print('tuntematon komento, yritä uudestaan')
