@@ -24,6 +24,53 @@ class Pelaaja:
         self.ika = ika
         self.pisteet = 0
         self.inventory =[]
+        self.x = 4
+        self.y = 4
+
+    def lisaa_pisteita(self, maara):
+        self.pisteet += maara
+        print(f'sait {maara} pisteen! Pisteet yhteensä: {self.pisteet}!')
+
+    def info(self):
+        print(f'pelaajan ikä on {self.ika} ja pisteet {self.pisteet}')
+
+    def liiku_eteen(self):
+        if self.y < 7:
+            self.y += 1
+            print("liikut askeleen eteenpäin")
+        else:
+            print('aita vastassa pohjoisessa!')
+
+    def liiku_taakse(self):
+            if self.y > 7:
+                self.y -= 1
+                print("liikut askeleen taaksepäin")
+            else:
+                print('aita vastassa etelässä!')
+
+    def liiku_oikealle(self):
+        if self.x < 7:
+            self.x += 1
+            print("Otat askeleen oikealle.")
+        else:
+            print('Seinä vastassa idässä!')
+    
+    def liiku_vasemmalle(self):
+        if self.x > 1:
+            self.x -= 1
+            print("Otat askeleen vasemmalle.")        
+        else:
+            print("Seinä vastassa lännessä!")
+            
+    #pelitilanteen tallennus
+    def tallenna_peli(self):
+        print('tallennetaan peli')
+
+    def lataa_peli(self):
+        pass
+
+
+
 
 #tyhjä lista esineille
 inventory = []
@@ -108,22 +155,25 @@ else:
     while True:
         print('\nPäävalikko')
         print('1. Aloita peli')
-        print('2. Ohjeet')
-        print('3. Katso parhaat tulokset')
-        print('4. lopettaaksesi pelin')
+        print('2. Lataa peli')
+        print('3. Ohjeet')
+        print('4. Katso parhaat tulokset')
+        print('5. lopettaaksesi pelin')
 
         komento = input('\nAnna komento: ')
-        if komento == "4":
+        if komento == "5":
             print('ohjelma lopetetaan')
             break
         elif komento == '1':
             print('Aloitetaan peli')
             pelaa_pelia()
         elif komento == '2':
+            print('Ladataan peli')
+        elif komento == '3':
             print('\n---- Pelin ohjeet ----')
             print('Tässä pelissä teet valintoja, joilla sinun täytyy läpäistä taso.')
             print('Peli koostuu useammasta tasosta, jotka pitää läpäistä voittaaksesi!')
-        elif komento == '3':
+        elif komento == '4':
             print('näytetään tulokset (luetaan tiedosto)...')
         else:
             print('tuntematon komento, yritä uudestaan')
