@@ -1,3 +1,6 @@
+import json
+
+
 class esine:
     #Yksittäinen inventaarioon lisättävä esine.
 
@@ -26,6 +29,7 @@ class Pelaaja:
         self.inventory =[]
         self.x = 4
         self.y = 4
+        self.taso = 1
 
     def lisaa_pisteita(self, maara):
         self.pisteet += maara
@@ -61,39 +65,68 @@ class Pelaaja:
             print("Otat askeleen vasemmalle.")        
         else:
             print("Seinä vastassa lännessä!")
-            
+
+    def lisaa_esine(self, uusi_esine):
+        self.inventory.append(uusi_esine)
+        print(f'keräsit esineen: {uusi_esine.nimi}')
+
+
     #pelitilanteen tallennus
+
     def tallenna_peli(self):
         print('tallennetaan peli')
+        try:
+            with open("save.txt", "w") as file:
+                data = {
+                    "nimi": self.nimi,
+                    "ika": self.ika,
+                    "pisteet": self.pisteet,
+                    "x": self.x,
+                    "y": self.y,
+                    "taso": self.taso
+                }
+                json.dump(data, file)
+            print("peli tallennettu!")
+        except FileNotFoundError:
+            print("Tiedostoa ei löydy.")
+        except IOError:
+            print("Tiedoston käsittelyssä tapahtui virhe.")
 
+    #pelitilanteen lataaminen
+    
     def lataa_peli(self):
-        pass
+        print('ladataan peli.')
+        try: 
+            with open("save.txt", "r") as file:
+                data = json.load(file)
+
+                self.nimi = data["nimi"]
+                self.ika = data['ika']
+                self.pisteet = data['pisteet']
+                self.x = data['x']
+                self.y = data['y']
+                self.taso = data['taso']
+            print("Peli ladattu onnistuneesti!")
+            return True
+        except FileNotFoundError:
+            print("Tiedostoa ei löydy, ei tallennettua peliä")
+            return False
+        except IOError:
+            print('Tiedoston käsittelyssä tapahtui virhe')
+            return False
+
+def tervehdi(pelaajanimi):
+    print(f'terve {pelaajanimi}')
 
 
-
-
-#tyhjä lista esineille
-inventory = []
-
-def tervehdi(ppelaajanimi):
-    print(f'terve {ppelaajanimi}')
-
-def lisaa_esine():
-    nimi = input("lisää esine inventaarioon: ")
-    uusi_esine = esine(nimi, "")
-    inventory.append(uusi_esine)
-    print(f'lisätty: {uusi_esine}')
-
-def nayta_inventaario():
-    print('\n-- inventaarion sisältö-- ')
+def nayta_inventaario(inventory=None):
+    """Näytä pelaajan inventaarion sisältö."""
     if not inventory:
-        print("inventaario on tyhjä")
-    else:
-        x = 1
-        for esine in inventory:
-            print(f'{x}. {esine}')
-            x += 1
-    print('-------------------------------------------')
+        print('Inventaario on tyhjä.')
+        return
+
+    for esine in inventory:
+        print(f'- {esine}')
 
 
 def pelaa_pelia():
