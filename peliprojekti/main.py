@@ -12,7 +12,7 @@ def paivita_high_score(nimi, pisteet):
 
     try:
         with open(tiedosto, "r") as file: 
-            json.dump(tulokset, file, indent=4)
+            tulokset = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         tulokset = []
         #jos tätä tiedostoa ei ole tai se on viallinen, aloitetaan tyhjällä listalla.
@@ -24,6 +24,22 @@ def paivita_high_score(nimi, pisteet):
         
         with open("highscores.json", "w") as file:
             json.dump(tulokset, file, indent=4)
+
+def nayta_high_score():
+    #päävalinkon #4 kohtaan, tiedoston lukeva ja tulostava funktio
+    print("\n --- Top 5 HIGH SCORES ---")
+    try:
+        with open("highscores.json", "r") as file:
+            tulokset = json.load(file)
+
+        if not tulokset:
+            print("lista on vielä tyhjä")
+        else:
+            for i, tulos in enumerate(tulokset, 1):
+                print(f'{i}. {tulos["nimi"]}: {tulos["pisteet"]} pistettä')
+    except FileNotFoundError:
+            print("lista on vielä tyhjä")
+    print("------------------------------------------")
 
 def nayta_inventaario(inventory=None):
     """Näytä pelaajan inventaarion sisältö."""
@@ -38,7 +54,9 @@ def nayta_inventaario(inventory=None):
 def pelaa_pelia(pelaaja):
     peli_käynnissa = True
     print('tervetuloa peliin')
-    print(" 'esc' pysäyttääksesi pelin")
+    print('Etsi roskia 7x7 ruudukosta ja vie')
+    print('ne ruutuun 7-7 kierrätettäväksi.')
+    print(" kirjoita 'esc' pysäyttääksesi pelin")
 
     #7x7 ruudukko Huone-olioita heti pelin alussa
     kartta = []
@@ -49,6 +67,29 @@ def pelaa_pelia(pelaaja):
             rivi.append(uusi_huone)
         kartta.append(rivi)
 
+    # määritetään roskien määrä tason mukaan, taso 1 sisältää 3 roskaa, taso 2 sisältää 4 roskaa, taso 3 sisältää 5 roskaa
+    roska_lkm = 0
+    kartalla_olevat_roskat = 2 + pelaaja.taso
+
+    while roska_lkm < kartalla_olevat_roskat:
+        rx = random.randint(0,6)
+        ry = random.randint(0,6)
+
+        if (rx, ry) != (3, 3) and (rx, ry) != (6, 6) and kartta[ry][rx].esine is None:
+            roska_tyypit = [
+                ("muovipullo", 0.2),
+                ("tölkki", 0.1),
+                ("pahvilaatikko", 0.4),
+                ("vahna akku", 2.5)
+            ]
+            valittu_roska = random.choice(roska_tyypit)
+
+            kartta[ry][rx].esine = esine(valittu_roska[0], valittu_roska[1])
+            roska_lkm += 1
+
+    #indeksit 6,6 (ruutu 7-7) tehdään kierrätyskeskukseksi
+    kartta[6][6].nimi = "kierrätyskeskus"
+
     #aloituspiste 7x7 ruudukon keskelle, 0-6, eli 3 on keskipiste
     pelaaja_x = 3
     pelaaja_y = 3
@@ -56,6 +97,56 @@ def pelaa_pelia(pelaaja):
 
     while peli_käynnissa:
         print(f'\nOlet tällä hetkellä paikassa: {pelaaja.sijainti.nimi}')
+
+        if pelaaja.sijainti.esine is not None:
+            roska = pelaaja.sijainti.esine
+            print(f' !! löysit maasta roskan: {roska.nimi} ({roska.paino}kg)')
+            roska_valinta = input("Poimitko roskan? (k/e): ").strip().lower()
+            if roska_valinta == 'k':
+                pelaaja.lisaa_esine(roska)  
+                pelaaja.lisaa_pisteita(10)
+                pelaaja.sijainti.esine = None
+       
+        elif pelaaja_x == 6 and pelaaja_y == 6:
+            print("\n--- Saavuit Kierrätyskeskukseen ---")
+            kerätyt = len(pelaaja.inventory)
+            print(f"Toit mukanasi {kerätyt} roskaa. Tason läpäisyyn vaaditaan vähintään 2 roskaa.")
+
+            if kerätyt >= 2:
+                print(f' aloitetaan roskien lajittelu')
+                for e in pelaaja.inventory:
+                    print(f'- Lajittelit esineen "{e.nimi}" konttiin!')
+
+                    #pistesysteemi 
+                    taso_bonus = pelaaja.taso * 100
+                    roska_bonus = kerätyt * 50 
+                    pelaaja.lisaa_pisteita(taso_bonus + roska_bonus)
+
+                    pelaaja.inventory.clear()
+                    print("Reppusi oon nyt tyhjenny ja roskat viety")
+
+                    paivita_high_score(pelaaja.nimi, pelaaja.pisteet)
+                    
+
+                if pelaaja.taso > 3:
+                    print("\n" + "="*20)
+                    print(" Onneksi olkoon, läpäisit pelin kaikki tasot ")
+                    print(f" Lopulliset pisteesi: {pelaaja.pisteet}")
+                    print("="*50)
+                    paivita_high_score(pelaaja.nimi, pelaaja.pisteet)
+                    peli_käynnissa = False
+
+                    print("\n" + "="*20)
+                    print(f' Loistavaa, läpäisit tason')
+                    if pelaaja.taso == 2:
+                        print('pääsit tasolle 2!')
+                        print('Kartalla on nyt 4 roskaa')
+                    
+                    elif pelaaja.taso == 3:
+                        print(" Pääsit viimeiselle tasolle! ")
+                        print(" Kartalla on nyt 5 roskaa kerättävänä.")
+                    print(" Sinut siirretään takaisin aloitukseen.")
+                    
         print('valitse minne mennään (e / t / o / v)')
         valinta = input('anna komento: ').strip().lower()
 
@@ -94,6 +185,7 @@ def pelaa_pelia(pelaaja):
             while peli_tauolla:
                 print("1. Jatka peliä")
                 print("2. Katso inventaario")
+                print("3. tallenna peli tiedostoon")
                 print("lopeta - Palaa päävalikkoon")
 
                 tauko_valinta = input("\nAnna komento: ").strip().lower()
@@ -105,10 +197,16 @@ def pelaa_pelia(pelaaja):
                     print("\n--- REPUN SISÄLTÖ ---")
                     nayta_inventaario(pelaaja.inventory)
                     print("--------------------\n")
-                elif tauko_valinta == 'lopeta':
+                elif tauko_valinta == '3':
+                    pelaaja.tallenna_peli()
+                    print("--------------------\n")
+                elif tauko_valinta == 'lopeta':             
                     print("Palataan päävalikkoon.")
+
+                    paivita_high_score(pelaaja.nimi, pelaaja.pisteet)
                     peli_tauolla = False
                     peli_käynnissa = False
+
                 else:
                     print("Tuntematon komento.")
 
@@ -124,8 +222,6 @@ def pelaa_pelia(pelaaja):
             rivi.append(uusi_huone)
         kartta.append(rivi)
 
-    kartta[2][1].esine = esine()
-
 #päävalikon ohjelma
 name = input("anna nimesi: ")
 age = int(input("kuinka vanha olet:"))
@@ -136,6 +232,12 @@ else:
     print("hei", name)
     pelaaja = Pelaaja(name, age)
 
+    try:
+        with open("peliprojekti/intro.txt", "r", encoding="utf-8") as file:
+            print(file.read())
+    except FileNotFoundError:
+        print("\nEsittelytekstia (intro.txt) ei loytynyt!")    
+        
     while True:
         print('\nPäävalikko')
         print('1. Aloita peli')
@@ -152,12 +254,16 @@ else:
             print('Aloitetaan peli')
             pelaa_pelia(pelaaja)
         elif komento == '2':
-            print('Ladataan peli')
+            if pelaaja.lataa_peli():
+                pelaa_pelia(pelaaja)
         elif komento == '3':
-            print('\n---- Pelin ohjeet ----')
-            print('Tässä pelissä teet valintoja, joilla sinun täytyy läpäistä taso.')
-            print('Peli koostuu useammasta tasosta, jotka pitää läpäistä voittaaksesi!')
+            try:
+                with open("peliprojekti/ohjeet.txt", "r", encoding="utf-8") as file:
+                    print(file.read())
+            except FileNotFoundError:
+                print("\nOhjetiedostoa (ohjeet.txt) ei löytynyt!")
+
         elif komento == '4':
-            print('näytetään tulokset (luetaan tiedosto)...')
+            nayta_high_score()
         else:
             print('tuntematon komento, yritä uudestaan')

@@ -37,7 +37,7 @@ class Pelaaja:
 
     def lisaa_pisteita(self, maara):
         self.pisteet += maara
-        print(f'sait {maara} pisteen! Pisteet yhteensä: {self.pisteet}!')
+        print(f'sait {maara} pistettä! Pisteet yhteensä: {self.pisteet}!')
 
     def info(self):
         print(f'pelaajan ikä on {self.ika} ja pisteet {self.pisteet}')

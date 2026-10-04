@@ -1,0 +1,12 @@
+---- Pelin ohjeet ----
+Tässä pelissä liikut 7x7 ruudukossa ja teet ekotekoja keräämällä roskia.
+Sinun täytyy kerätä vähintään 2 roskaa jokaisella tasolla ja viedä ne
+kierrätyskeskukseen (ruutuun 7-7) läpäistäksesi tason!
+Peli koostuu kolmesta tasosta. Voitit pelin, kun kaikki tasot on siivottu.
+
+Liikkumiskomennot:
+e = eteenpäin (pohjoinen)
+t = taaksepäin (etelä)
+o = oikealle (itä)
+v = vasemmalle (länsi)
+esc = laittaa pelin tauolle, jossa voit katsoa repun tai tallentaa.
