@@ -8,7 +8,7 @@ def tervehdi(pelaajanimi):
 
 def paivita_high_score(nimi, pisteet):
     #tämä tallentaa pelaajan tuloksen high score listalle
-    tiedosto = "highscores.json"
+    tiedosto = "peliprojekti/highscores.json"
 
     try:
         with open(tiedosto, "r") as file: 
@@ -122,7 +122,9 @@ def pelaa_pelia(pelaaja):
                     roska_bonus = kerätyt * 50 
                     pelaaja.lisaa_pisteita(taso_bonus + roska_bonus)
 
+                    #tyhjentää repun ja siirtää seuraavalle tasolle
                     pelaaja.inventory.clear()
+                    pelaaja.taso += 1
                     print("Reppusi oon nyt tyhjenny ja roskat viety")
 
                     paivita_high_score(pelaaja.nimi, pelaaja.pisteet)
@@ -135,9 +137,10 @@ def pelaa_pelia(pelaaja):
                     print("="*50)
                     paivita_high_score(pelaaja.nimi, pelaaja.pisteet)
                     peli_käynnissa = False
-
+                else:
                     print("\n" + "="*20)
                     print(f' Loistavaa, läpäisit tason')
+                    
                     if pelaaja.taso == 2:
                         print('pääsit tasolle 2!')
                         print('Kartalla on nyt 4 roskaa')
@@ -146,7 +149,39 @@ def pelaa_pelia(pelaaja):
                         print(" Pääsit viimeiselle tasolle! ")
                         print(" Kartalla on nyt 5 roskaa kerättävänä.")
                     print(" Sinut siirretään takaisin aloitukseen.")
-                    
+
+                    #pelaaja siirtyy takaisin aloitus ruutuun.
+                    pelaaja_x = 3
+                    pelaaja_y = 3
+                    pelaaja.sijainti = kartta[pelaaja_y][pelaaja_x]
+
+                    #tämä tyhjentää kartan kaikista roskista ennen uusien arpomista
+                    for y in range(7):
+                        for x in range(7):
+                            kartta[y][x].esine = None
+
+                    # arvotaan seuraavan tason roska määrä (taso 2=4 roskaa ja taso 3=5)
+                    roska_lkm = 0 
+                    kartalla_olevat_roskat = 2 + pelaaja.taso
+                    while roska_lkm < kartalla_olevat_roskat:
+                        rx = random.randint(0, 6)
+                        ry = random.randint(0, 6)
+                        if (rx, ry) != (3, 3) and (rx, ry) != (6, 6) and kartta[ry][rx].esine is None:
+                            roska_tyypit = [
+                                ("muovipullo", 0.2),
+                                ("tölkki", 0.1),
+                                ("pahvilaatikko", 0.4),
+                                ("vahna akku", 2.5)
+                            ]
+                            valittu_roska = random.choice(roska_tyypit)
+                            kartta[ry][rx].esine = esine(valittu_roska[0], valittu_roska[1])
+                            roska_lkm += 1
+            else:
+                print(f'Sinulla on vain {kerätyt} roskaa, tarvitset vähitntään 2 roskaa päästäksesi läpi')
+
+        if not peli_käynnissa:
+            break
+
         print('valitse minne mennään (e / t / o / v)')
         valinta = input('anna komento: ').strip().lower()
 
