@@ -1,9 +1,14 @@
-
+body {
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: rgb(224, 222, 219);
+    margin: 0px;
+}
 nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 30px;
+    
     background-color: rgb(171, 119, 227);
 
 }
@@ -11,4 +16,51 @@ nav {
 ul {
     display: flex;
     flex-direction: row;
+    list-style: none;
+}
+
+ul li {
+    margin: 20px;
+
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: aliceblue;
+    min-height: 100vh;
+    
+}
+
+.products {
+    display: flex;
+    flex-direction: row;
+
+}
+.product {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+    margin: 20px;
+    background-color: rgb(215, 200, 228);
+    padding: 20px;
+    border-radius: 15px;
+}
+nav img {
+
+    max-width: 100px;
+}
+
+.contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+
+
+}
+
+.contact {
+    display: flex;
+
 }
